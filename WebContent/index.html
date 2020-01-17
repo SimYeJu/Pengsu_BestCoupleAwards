@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<head>
+ <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css'>
+<meta charset="UTF-8">
+<title>파자마어워드 - 베스트 커플상</title>
+
+
+<!-- 스크립트 -->
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+	<link href="https://fonts.googleapis.com/css?family=Do+Hyeon|Poor+Story&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+ 	<link rel="stylesheet" href="./search.css">
+	
+	<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript">
+	
+	//크롤링 결과 json파일 읽기
+    var xhr = new XMLHttpRequest();
+    var paramVal = "paramVal";
+    var target = "result.json";
+    xhr.open("GET", target, true);
+    let arr = "";
+    
+    xhr.onload = function(){
+  	  if(xhr.readyState === XMLHttpRequest.DONE){
+  		  if(xhr.status == 200){
+  			  let loadedJSON = JSON.parse(xhr.responseText);
+  			 
+  			  console.log(loadedJSON);
+  			  let json_data = loadedJSON;
+
+  			  arr = Object.keys(json_data).map((key) => [key, json_data[key]]);
+  			  console.log(arr);
+  			  
+  			  $("#content").html("resultCode: " + arr[0][0] + "<br>"); 
+  		  }else{
+  			  alert("fail to load");
+  		  }
+  	  }
+    }
+    xhr.send(null);
+    
+	$(function(){
+		var inner = document.getElementById('inner');
+	    for(var i = 3; i < 10; i++){
+	/*
+	    	console.log(arr);
+	    	$('#inner').html() = $('#inner').html()+"<tr><td>"+(i+1)+"</td><td>"
+	    							+arr[i][0]+"</td><td>"+arr[i][1]+"</td><td>"+arr[i][1]+"</td></tr>";
+	    */
+	    $("#inner").append("<tr><td>"+(i+1)+"</td><td>"
+	    							+arr[i][0]+"</td><td>"+((arr[i][1]/4183).toFixed(3)*100).toFixed(1)+"</td></tr>");
+	    }
+	})
+    
+	
+	google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+	
+    function drawChart() {
+/* 	      var data = google.visualization.arrayToDataTable([
+	        ['TOP3', '박재영 PD', '전원배 PD', '김명중 사장'],
+	        ['베스트 커플상', 800, 1000, 600],
+	      ]); */
+	  	
+       var data = google.visualization.arrayToDataTable([
+           ['TOP3', '비율', { role: 'style' }, { role : 'annotation' }],
+           ['2위', Number(((arr[1][1]/4183).toFixed(3)*100).toFixed(1)), 'silver', arr[1][0]],            // RGB value
+           ['1위', Number(((arr[0][1]/4183).toFixed(3)*100).toFixed(1)), 'gold', arr[0][0]],            // English color name
+           ['3위', Number(((arr[2][1]/4183).toFixed(3)*100).toFixed(1)), '#b87333', arr[2][0]],
+          //['Platinum', 21.45, 'color: #e5e4e2' ], // CSS-style declaration
+        ]);
+	      
+      var view = new google.visualization.DataView(data);
+      view.setColumns([0, 1,
+                       { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" },
+                       2]);
+	      
+/* 	      var options = {
+	        chart: {
+	          title: '펭TV 파자마 어워드',
+	          subtitle: '베스트 커플상 TOP 3',
+	        }
+	      }; */
+	      
+      var options = {
+    	        title: "펭TV 파자마 어워드",
+    	        subtitle: '베스트 커플상 TOP 3',
+    	        width: 450,
+    	        height: 300,
+    	        bar: {groupWidth: "80%"},
+    	        legend: { position: "none" },
+    	        vAxis: {textPosition : 'none', gridlines: {
+   	                color: 'transparent'
+   	            }},
+   	         	fontName: 'Poor Story',
+   	         	fontSize: 15
+    	      };
+	
+  
+      var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+      chart.draw(data, options);
+  
+    }
+	    
+	   /* 우빈 스크립트 : 스크립트태크 젤밑에 위치시키기~~ */
+	   var urls=["0","https://www.youtube.com/channel/UCtckgmUcpzqGnzcs7xEqMzQ/community","pengsu loves me","www.youtube.com/channel/UCtckgmUcpzqGnzcs7xEqMzQ/community"];
+	   function Enter_check(){
+	   if( window.event.keyCode == 13){
+	   		//함수
+	   		var url_value = document.getElementById("url_value").value;
+	   		console.log(url_value);
+	   		var flag = false;
+	   		for(var i=0; i<urls.length; i++){
+	   			console.log(">>"+urls[i]);
+	   			if(url_value == urls[i]){
+	   				flag = true;
+	   			}
+	   		}
+	   		if(flag == true){
+	   			//document.getElementById("yeju").style.display="";
+	   			//document.getElementById("yeju").toggleClass("fadeIn");
+	   			MyFadeFunction();
+	   			/* 페이지스르르내려가게해주기 */
+	   			var position = $("#yejuTable").offset();
+	   		    $('html, body').animate({scrollTop : position.top}, 2000);	
+	   		}else{
+	   			alert("올바른 주소를 입력해주세요");
+	   		}
+	   			$("#url_value").val("");
+	   		return;
+	   	}
+	   }
+	   var opacity=0;
+	   function MyFadeFunction() {
+	   	/* 스르르나타나게해주기 */
+	   	   if (opacity<1) {
+	   	      opacity += .1;
+	   	      setTimeout(function(){MyFadeFunction()},100);
+	   	   }
+	   	   document.getElementById('yeju').style.opacity = opacity;
+	   	}
+	</script>
+
+</head>
+<body style="text-align:center; height : 1400 px;">
+	<!-- partial:index.partial.html -->
+<div class='column'> 
+  <div class='search'>
+    <div class='search_bar'>
+      <input id='searchOne' type='checkbox'>
+      <label for='searchOne' onKeyPress="Enter_check();">
+        <i class='icon ion-android-search'></i>
+        <i class='last icon ion-android-close'></i>
+        <p>|</p>
+      </label>
+      <input id='url_value' placeholder='URL을 입력하세요...' type='text'  onkeyup="Enter_check()">
+    </div>
+  </div>
+</div>
+
+<!-- 예주가 만든거 들어갈 곳 -->
+<div id ='yeju' style="text-align:center; opacity: 0;">
+
+
+
+
+<h1 style="font-family: 'Do Hyeon', sans-serif;font-size:48px">베스트 커플상 댓글 투표 결과는?</h1><br>
+
+	<div id="columnchart_values" style="width: 600px; height: 200px; font-family: 'Poor Story', cursive;"></div>
+	<br><br><br><br><br><br><br>
+	
+	<table id="yejuTable" class="table table-hover" style="width: 600px; font-family: 'Poor Story', cursive;">
+		<tr>
+			<th style="text-align:center;">순위</th>
+			<th style="text-align:center;">이름 </th>
+			<th style="text-align:center;">퍼센트</th>
+		</tr>
+		<tbody id="inner">
+			
+		</tbody>
+	</table>
+	
+</div>
+<!-- partial -->
+  
+</body>
+</html>
